@@ -53,6 +53,12 @@ void			ft_handleinput(const int fd, char **arr)
 	char		*str2;
 
 	str1 = ft_strdup(&array[fd]);
+	str2 = ft_chrsub(&str1, '\n', '\0');
+	ft_strdel(&array);
+	array[fd] = ft_strdup(str2 + 1);
+	*line = ft_strdup(&str1);
+	ft_strdel(&str1);
+	return ;
 }
 
 
@@ -78,12 +84,13 @@ int				get_next_line(const int fd, char **line)
 	else if (ft_strchr(array[fd], '\n') != NULL)
 	{
 		//THIS IS A FUNCTION - FT_HANDLEINPUT(**LINE)
-		str1 = ft_strdup(&array[fd]);
+		/*str1 = ft_strdup(&array[fd]);
 		str2 = ft_chrsub(&str1, '\n', '\0');
 		ft_strdel(&array);
 		array[fd] = ft_strdup(str2 + 1);
 		*line = ft_strdup(&str1);
-		ft_strdel(&str1);
+		ft_strdel(&str1);*/
+		ft_handleinput(fd, array);
 	}
 	else
 		return (0);

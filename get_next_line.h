@@ -10,4 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#IFNDEF GET_NEXT_LINE_H
+#DEF GET_NEXT_LINE_H
 
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#def BUFF_SIZE
+
+
+
+
+
+#endif
