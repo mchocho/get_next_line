@@ -6,7 +6,7 @@
 /*   By: mchocho <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 14:58:28 by mchocho           #+#    #+#             */
-/*   Updated: 2019/07/26 17:26:19 by mchocho          ###   ########.fr       */
+/*   Updated: 2019/08/02 13:50:40 by mchocho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,22 +72,22 @@ int				get_next_line(const int fd, char **line)
 		return (-1);
 	if (array[fd] == NULL)
 		if (!(array[fd] = ft_strnew(1)))//(char)malloc(sizeof(char) * 1)))
-			return (NULL);
+			return (-1);
 	*array[fd] = '\0';
 	ft_readinput(fd, array);
 	if (ft_strlen(array[fd]) != 0)
 	{
 		*line = ft_strdup(array[fd]);
-		ft_strdel(array[fd]);
+		ft_strdel(&array[fd]);
 	}
 	else if (ft_strchr(array[fd], '\n') != NULL)
 	{
 		//THIS IS A FUNCTION - FT_HANDLEINPUT(**LINE)
-		str1 = ft_strdup(&array[fd]);
-		str2 = ft_chrsub(&str1, '\n', '\0');
-		ft_strdel(&array);
+		str1 = ft_strdup(array[fd]);
+		str2 = ft_chrsub(str1, '\n', '\0');
+		ft_strdel(array);
 		array[fd] = ft_strdup(str2 + 1);
-		*line = ft_strdup(&str1);
+		*line = ft_strdup(str1);
 		ft_strdel(&str1);
 	}
 	else
