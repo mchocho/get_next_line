@@ -6,7 +6,7 @@
 /*   By: mchocho <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 14:58:28 by mchocho           #+#    #+#             */
-/*   Updated: 2019/08/02 13:50:40 by mchocho          ###   ########.fr       */
+/*   Updated: 2019/08/02 18:20:47 by mchocho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ static void		ft_readinput(const int fd, char **list)
 	array[fd] = ft_strdup(str2 + 1);
 	*line = ft_strdup(&str1);
 	ft_strdel(&str);
+	return ;
 }*/
-
 
 int				get_next_line(const int fd, char **line)
 {
@@ -89,6 +89,7 @@ int				get_next_line(const int fd, char **line)
 		array[fd] = ft_strdup(str2 + 1);
 		*line = ft_strdup(str1);
 		ft_strdel(&str1);
+		//ft_handleinput(fd, array);
 	}
 	else
 		return (0);
