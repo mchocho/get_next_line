@@ -10,13 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#IFNDEF GET_NEXT_LINE_H
-#DEF GET_NEXT_LINE_H
-
-#include <fcntl.h>
+#ifndef GET_NEXT_LINE_H
+#define GET_NEXT_LINE_H
+#define BUFF_SIZE 1000
+#include "libft.libft.h"
 #include <stdio.h>
 #include <stdlib.h>
-#def BUFF_SIZE
 
 
 
