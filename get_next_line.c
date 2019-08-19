@@ -6,7 +6,7 @@
 /*   By: mchocho <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 14:58:28 by mchocho           #+#    #+#             */
-/*   Updated: 2019/07/17 18:54:54 by mchocho          ###   ########.fr       */
+/*   Updated: 2019/08/02 18:20:47 by mchocho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,21 @@ static void		ft_readinput(const int fd, char **list)
 	char	buffer[BUFF_SIZE + 1];
 	int		result;
 
+	if (temp)
+	{}
 	while (ft_strchr(list[fd], '\n') == NULL)
 	{
 		if ((result = read(fd, buffer, BUFF_SIZE)) == 0)
 			break;
 		buffer[result] = '\0';
-		input = ft_strjoin(list[fd], buff);
-		ft_strdel(list[fd]);
+		input = ft_strjoin(list[fd], buffer);
+		ft_strdel(&list[fd]);
 		temp = ft_strdup(input);
-		ft_strdel(input);
+		ft_strdel(&input);
 	}
 }
 
-void			ft_handleinput(const int fd, char **arr)
+/*void			ft_handleinput(const int fd, char **arr)
 {
 	char		*str1;
 	char		*str2;
@@ -57,10 +59,9 @@ void			ft_handleinput(const int fd, char **arr)
 	ft_strdel(&array);
 	array[fd] = ft_strdup(str2 + 1);
 	*line = ft_strdup(&str1);
-	ft_strdel(&str1);
+	ft_strdel(&str);
 	return ;
-}
-
+}*/
 
 int				get_next_line(const int fd, char **line)
 {
@@ -72,25 +73,25 @@ int				get_next_line(const int fd, char **line)
 	if (fd < 0 || read(fd, buffer, 0) < 0 || !line || BUFF_SIZE < 1)
 		return (-1);
 	if (array[fd] == NULL)
-		if (!(array[fd] = (char)malloc(sizeof(char) * 1)))
-			return (NULL);
+		if (!(array[fd] = ft_strnew(1)))//(char)malloc(sizeof(char) * 1)))
+			return (-1);
 	*array[fd] = '\0';
 	ft_readinput(fd, array);
 	if (ft_strlen(array[fd]) != 0)
 	{
-		*line = ft_strdup(&array[fd]);
+		*line = ft_strdup(array[fd]);
 		ft_strdel(&array[fd]);
 	}
 	else if (ft_strchr(array[fd], '\n') != NULL)
 	{
 		//THIS IS A FUNCTION - FT_HANDLEINPUT(**LINE)
-		/*str1 = ft_strdup(&array[fd]);
-		str2 = ft_chrsub(&str1, '\n', '\0');
-		ft_strdel(&array);
+		str1 = ft_strdup(array[fd]);
+		str2 = ft_chrsub(str1, '\n', '\0');
+		ft_strdel(array);
 		array[fd] = ft_strdup(str2 + 1);
-		*line = ft_strdup(&str1);
-		ft_strdel(&str1);*/
-		ft_handleinput(fd, array);
+		*line = ft_strdup(str1);
+		ft_strdel(&str1);
+		//ft_handleinput(fd, array);
 	}
 	else
 		return (0);
