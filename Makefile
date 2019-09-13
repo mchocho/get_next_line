@@ -10,31 +10,35 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = get_next_line.a
+NAME=	get_next_line.a
 
-HEADER = get_next_line.h
+HEADER=	get_next_line.h
 
-FLAGS = -Wall -Werror -Wextra -c
+FLAGS=	-Wall -Werror -Wextra -c
 
-SRC = get_next_line.c
+SRC=	get_next_line.c
 
-OBJECT = get_next_line.o
-
-all: $(NAME)
+OBJECT:=	get_next_line.o
 
 $(NAME):
+	$(MAKE) -C ./libft
 	gcc $(FLAGS) $(SRC) $(HEADERS)
 	ar rv $(NAME) $(OBJECT)
-	rm *.h.ghc
+	rm -f *.gch
+	
+run:	
+	gcc $(FLAGS) main.c $(NAME) libft/libft.a
+	./a.out ./a.exe
+
+all:	$(NAME)
 
 clean:
-	rm -f $(OBJECT) *.ghc
+	rm -f $(OBJECT) *.gch *.stackdump *.dSYM *.exe libft/*.o
 
-fclean: clean
-	rm -f $(NAME)
+fclean:	clean
+	rm -f $(NAME) #libft/libft.a
 
-re:
-	fclean all
+re:	fclean all
 
 norm:
 	norminette $(FN)
