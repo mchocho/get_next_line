@@ -24,7 +24,7 @@ $(NAME):
 	$(MAKE) -C ./libft
 	gcc $(FLAGS) $(SRC) $(HEADERS)
 	ar rv $(NAME) $(OBJECT)
-	rm -f *.gch
+	rm -rf *.gch
 	
 run:	
 	gcc $(FLAGS) main.c $(NAME) libft/libft.a
@@ -33,10 +33,10 @@ run:
 all:	$(NAME)
 
 clean:
-	rm -f $(OBJECT) *.gch *.stackdump *.dSYM *.exe libft/*.o
+	rm -rf $(OBJECT) *.o .*gch *.stackdump .*dSYM *.exe libft/*.o
 
 fclean:	clean
-	rm -f $(NAME) #libft/libft.a
+	rm -rf $(NAME)
 
 re:	fclean all
 
