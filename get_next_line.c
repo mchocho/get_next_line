@@ -6,7 +6,7 @@
 /*   By: mchocho <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 14:58:28 by mchocho           #+#    #+#             */
-/*   Updated: 2019/08/19 13:50:42 by mchocho          ###   ########.fr       */
+/*   Updated: 2019/09/17 14:24:15 by mchocho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static char		*ft_concatbuffers(char *str, char *buffer)
 	temp = ft_strjoin(str, buffer);
 	return (temp);
 }
-
 
 static char		*ft_getline(char *str, char **line, int i)
 {
@@ -45,8 +44,8 @@ int			get_next_line(const int fd, char **line)
 {
 	static char		*str;
 	char			buffer[BUFF_SIZE + 1];
-	int			result;
-	int			i;
+	int				result;
+	int				i;
 
 	if (fd < 0 || read(fd, buffer, 0) < 0 || BUFF_SIZE < 0)
 		return (-1);
@@ -55,7 +54,7 @@ int			get_next_line(const int fd, char **line)
 		str = ft_strnew(0);
 	while ((result = read(fd, buffer, BUFF_SIZE)) > 0)
 	{
-		buffer[result] = '\0';	
+		buffer[result] = '\0';
 		str = ft_concatbuffers(str, buffer);
 		if (ft_strichrfromindex(str, '\n', (i * BUFF_SIZE)) > -1)
 			break ;
