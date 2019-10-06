@@ -13,55 +13,63 @@
 #include "get_next_line.h"
 #include "libft/libft.h"
 
-static char		*ft_concatbuffers(char *str, char *buffer)
+static int	ft_checkline(char **line, char **array)
 {
 	char	*temp;
+	char	*str;
+	int	i;
 
-	temp = ft_strjoin(str, buffer);
-	return (temp);
+	str = *array;
+	if ((i = ft_strichr(str, '\n')) == -1)
+		return (0);
+	temp = &str[i];
+	*temp = '\0';
+	*line = ft_strdup(*array);
+	*array = ft_strdup(temp + 1);
+	return (1);
 }
 
-static char		*ft_getline(char *str, char **line, int i)
+static int	ft_getline(char **line, char **array, int fd)
 {
-	char *temp;
-	
-	if ((i = ft_strichrfromindex(str, '\n', i)) > -1)
-		*line = ft_strsub(str, 0, i);
-	else
-		*line = ft_strdup(str);
-	if (ft_strcmp(*line, str) == 0)
-		str = NULL;
-	else
+	char	buffer[BUFF_SIZE + 1];
+	char	*temp;
+	int	result;
+
+	while ((result = read(fd, buffer, BUFF_SIZE)) > 0)
 	{
-		temp = str;
-		str = ft_strsub(str, i + 1, ft_strlen(str + (i + 1)));
-		free(temp);
+		buffer[result] = '\0';
+		if (*array)
+		{
+			temp = *array;
+			*array = ft_strjoin(temp, buffer);
+			ft_strdel(&temp);
+		}
+		else
+			*array = ft_strdup(buffer);
+		if (ft_checkline(line, array))
+			break;
 	}
-	return (str);
+	return (result > 0);
 }
 
 int			get_next_line(const int fd, char **line)
 {
-	static char		*str;
-	char			buffer[BUFF_SIZE + 1];
-	int				result;
-	int				i;
+	static char		*array[FD_COUNT];
+	int			result;
+	char			buffer[1];
 
 	if (fd < 0 || read(fd, buffer, 0) < 0 || BUFF_SIZE < 0)
 		return (-1);
-	i = 0;
-	if (str == NULL)
-		str = ft_strnew(0);
-	while ((result = read(fd, buffer, BUFF_SIZE)) > 0)
+	if (array[fd] && ft_checkline(line, &array[fd]))
+		return (1);
+	result = ft_getline(line, &array[fd], fd);
+	if (result != 0 || !array[fd] || *(array[fd]) == '\0')
 	{
-		buffer[result] = '\0';
-		str = ft_concatbuffers(str, buffer);
-		if (ft_strichrfromindex(str, '\n', (i * BUFF_SIZE)) > -1)
-			break ;
-		i++;
+		if (!result && *line)
+			*line = NULL;
+		return (result);
 	}
-	if (result < BUFF_SIZE && ft_strlen(str) == 0)
-		return (0);
-	str = ft_getline(str, line, i * BUFF_SIZE);
+	*line = array[fd];
+	array[fd] = NULL;
 	return (1);
 }

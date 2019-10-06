@@ -15,6 +15,7 @@
 
 #include "libft/libft.h"
 #define BUFF_SIZE 255
+#define FD_COUNT 1024 + 1
 
 int	get_next_line(const int fd, char **line);
 
