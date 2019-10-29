@@ -13,18 +13,6 @@
 #include "get_next_line.h"
 #include "libft/libft.h"
 
-static char		*ft_concatbuffers(char *str, char *buffer)
-{
-	char	*temp;
-
-	if (str == NULL)
-		str = ft_strnew(0);
-	temp = ft_strjoin(str, buffer);
-	ft_strdel(&str);
-	str = temp;
-	return (temp);
-}
-
 static char		*ft_getline(char buffer[], char *str, char **line)
 {
 	char 	temp[BUFF_SIZE + 1];
@@ -57,8 +45,32 @@ size_t			ft_consolidate_buffer(char buffer[], char *str, char **line)
 			return (1);
 		}
 		ft_concatbuffers(str, buffer);
-		return (0);
+		//return (0);
 	}
+	return (0;
+}
+
+static int	ft_getline(char **line, char **array, int fd)
+{
+	char	buffer[BUFF_SIZE + 1];
+	char	*temp;
+	int	result;
+
+	while ((result = read(fd, buffer, BUFF_SIZE)) > 0)
+	{
+		buffer[result] = '\0';
+		if (*array)
+		{
+			temp = *array;
+			*array = ft_strjoin(temp, buffer);
+			ft_strdel(&temp);
+		}
+		else
+			*array = ft_strdup(buffer);
+		if (ft_checkline(line, array))
+			break;
+	}
+	return (result > 0);
 }
 
 int			get_next_line(const int fd, char **line)
