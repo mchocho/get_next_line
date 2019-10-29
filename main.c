@@ -15,9 +15,14 @@ int main(int argc, char **argv)
 
 	fd = open(argv[1], O_RDONLY);
 	while((result = get_next_line(fd, &arr)) == 1)
+	{
 		ft_putendl(arr);
+		free(array);
+	}
 	ft_putstr("\n\nGNL returned: ");
 	ft_putnbr(result);
 	close(fd);
+	while (1)
+		;
 	return (0);
 }

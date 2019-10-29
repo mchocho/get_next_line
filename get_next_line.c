@@ -17,51 +17,71 @@ static char		*ft_concatbuffers(char *str, char *buffer)
 {
 	char	*temp;
 
+	if (str == NULL)
+		str = ft_strnew(0);
 	temp = ft_strjoin(str, buffer);
+	ft_strdel(&str);
+	str = temp;
 	return (temp);
 }
 
-static char		*ft_getline(char *str, char **line, int i)
+static char		*ft_getline(char buffer[], char *str, char **line)
 {
-	char *temp;
+	char 	temp[BUFF_SIZE + 1];
+	size_t	i;
 	
-	if ((i = ft_strichrfromindex(str, '\n', i)) > -1)
-		*line = ft_strsub(str, 0, i);
-	else
-		*line = ft_strdup(str);
-	if (ft_strcmp(*line, str) == 0)
-		str = NULL;
+	ft_bzero(&temp, BUFF_SIZE + 1);
+	if ((i = (size_t)ft_strchr(buffer, '\n')) == NULL)
+	{
+		ft_concatbuffers(str, buffer);
+		*line = str;
+	}
 	else
 	{
-		temp = str;
-		str = ft_strsub(str, i + 1, ft_strlen(str + (i + 1)));
-		free(temp);
+		ft_memcpy(temp, buffer, i - (size_t)buffer);
+		ft_concatbuffers(str, temp);
+		ft_strcpy(temp, &buffer[i - (size_t)buffer]);
+		ft_bzero(buffer, BUFF_SIZE + 1);
+		ft_strcpy(buffer, temp);
+		*line = str;
 	}
-	return (str);
+	return (*line);
+}
+
+size_t			ft_consolidate_buffer(char buffer[], char *str, char **line)
+{
+	if (buffer[0] != 0)
+	{
+		if (ft_strchr(buffer, '\n'))
+		{
+			return (1);
+		}
+		ft_concatbuffers(str, buffer);
+		return (0);
+	}
 }
 
 int			get_next_line(const int fd, char **line)
 {
-	static char		*str;
-	char			buffer[BUFF_SIZE + 1];
-	int				result;
-	int				i;
+	char		*str;
+	static char	buffer[BUFF_SIZE + 1];
+	int		result;
+	int		i;
 
 	if (fd < 0 || read(fd, buffer, 0) < 0 || BUFF_SIZE < 0)
 		return (-1);
 	i = 0;
-	if (str == NULL)
-		str = ft_strnew(0);
+	str = NULL;
+	ft_consolidate_buffer(buffer, str, line);
 	while ((result = read(fd, buffer, BUFF_SIZE)) > 0)
 	{
+		if (!result && str == NULL)
+			return (0);
 		buffer[result] = '\0';
-		str = ft_concatbuffers(str, buffer);
-		if (ft_strichrfromindex(str, '\n', (i * BUFF_SIZE)) > -1)
+		if ((i = ft_strichrfromindex(buffer, '\n', BUFF_SIZE)) >= 0)
 			break ;
-		i++;
+		str = ft_concatbuffers(str, buffer);
 	}
-	if (result < BUFF_SIZE && ft_strlen(str) == 0)
-		return (0);
-	str = ft_getline(str, line, i * BUFF_SIZE);
+	ft_getline(buffer, str, line);
 	return (1);
 }
