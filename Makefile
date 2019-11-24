@@ -12,16 +12,16 @@
 
 NAME=	get_next_line.a
 
-HEADER=	get_next_line.h
+HEADER=	./includes/get_next_line.h
 
 FLAGS=	-Wall -Werror -Wextra -c
 
-SRC=	get_next_line.c
+SRC=	./src/get_next_line.c
 
 OBJECT:=	get_next_line.o
 
 $(NAME):
-	$(MAKE) -C ./libft
+	@$(MAKE) -C ./libft
 	gcc $(FLAGS) $(SRC) $(HEADERS)
 	ar rv $(NAME) $(OBJECT)
 	rm -rf *.gch
