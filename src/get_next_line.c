@@ -20,7 +20,7 @@ static void		ft_cleanher(l_list **list, int all)
 		return ;
 	(*list)->current = (*list)->head;
 	next = (*list)->current->next;
-	ft_bzero((*list)->current->str, (*list)->current->length);
+	ft_strcleandel(&(*list)->current->str);
 	(*list)->current->length = 0;
 	(*list)->current->next = NULL;
 	free((*list)->current);
@@ -47,7 +47,7 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 			if (i > -1)
 			{
 				ft_strncat(temp_1, ((char *)(*list)->current->str), (size_t)i + 1);
-				j = (j != 0) ? ((BUFF_SIZE * j) + i) - 1 : i + 1;
+				j = ((BUFF_SIZE * j) + i);
 				if ((size_t)i < (*list)->current->length)
 				{
 					temp_2 = (*list)->current->str;
@@ -75,7 +75,7 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 }
 
 
-static void		ft_addtail(l_list **list, char str[BUFF_SIZE + 1], size_t length)
+static void		ft_addtail(l_list **list, char *str, size_t length)
 {
 	t_line *line;
 

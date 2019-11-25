@@ -14,7 +14,7 @@
 #define GET_NEXT_LINE_H
 
 #include "../libft/includes/libft.h"
-#define BUFF_SIZE 1
+#define BUFF_SIZE 300
 #define MAX_SIZE 2147483647 / (1024 * 4)
 
 typedef struct s_line {
