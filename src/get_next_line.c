@@ -12,6 +12,29 @@
 
 #include "../includes/get_next_line.h"
 
+static void		ft_initlist(l_list **list)
+{
+	(*list)->current = NULL;
+	(*list)->head = NULL;
+	(*list)->tail = NULL;
+}
+
+static void		ft_addtail(l_list **list, char *str, size_t length)
+{
+	t_line *line;
+
+	if (!(line = (t_line *)malloc(sizeof(t_line))))
+		return ;
+	line->str = ft_strdup(str);
+	line->length = length;
+	line->next = NULL;
+	if ((*list)->head == NULL)
+		(*list)->head = line;
+	else
+		(*list)->tail->next = line;
+	(*list)->tail = line;
+}
+
 static void		ft_cleanher(l_list **list, int all)
 {
 	t_line	*next;
@@ -25,9 +48,13 @@ static void		ft_cleanher(l_list **list, int all)
 	(*list)->current->next = NULL;
 	free((*list)->current);
 	(*list)->head = next;
-	if (all)
-		(*list)->tail = NULL;
 	(*list)->current = (*list)->head;
+	if (all)
+	{
+		(*list)->tail = NULL;
+		free(*list);
+		*list = NULL;
+	}
 }
 
 static int		ft_concatbuffers(l_list **list, char **line, int i)
@@ -59,8 +86,6 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 			else
 				ft_strcat(temp_1, (*list)->current->str);
 			ft_cleanher(list, 1);
-			free(*list);
-			*list = NULL;
 			break;
 		} else
 			ft_strcat(temp_1, (*list)->current->str);
@@ -72,30 +97,6 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 		return (1);
 	}
 	return (0);
-}
-
-
-static void		ft_addtail(l_list **list, char *str, size_t length)
-{
-	t_line *line;
-
-	if (!(line = (t_line *)malloc(sizeof(t_line))))
-		return ;
-	line->str = ft_strdup(str);
-	line->length = length;
-	line->next = NULL;
-	if ((*list)->head == NULL)
-		(*list)->head = line;
-	else
-		(*list)->tail->next = line;
-	(*list)->tail = line;
-}
-
-static void		ft_initlist(l_list **list)
-{
-	(*list)->current = NULL;
-	(*list)->head = NULL;
-	(*list)->tail = NULL;
 }
 
 int			get_next_line(const int fd, char **line)
