@@ -14,6 +14,8 @@
 
 static void		ft_initlist(l_list **list)
 {
+	if (*list == NULL)
+		return ;
 	(*list)->current = NULL;
 	(*list)->head = NULL;
 	(*list)->tail = NULL;
