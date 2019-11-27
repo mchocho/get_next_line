@@ -25,7 +25,7 @@ static void		ft_addtail(l_list **list, char *str, size_t length)
 {
 	t_line *line;
 
-	if (!(line = (t_line *)malloc(sizeof(t_line))))
+	if (*list == NULL || !(line = (t_line *)malloc(sizeof(t_line))))
 		return ;
 	line->str = ft_strdup(str);
 	line->length = length;
