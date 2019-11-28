@@ -10,6 +10,13 @@ int main(int argc, char **argv)
 	char *arr;
 	arr = NULL;
 
+	//ft_putstr("Buff size: ");
+	//ft_putnbr(BUFF_SIZE);
+	//ft_putstr("\n-------------------\n");
+	//ft_putstr("Max Size: ");
+	//ft_putnbr(MAX_SIZE);
+	//ft_putstr("\n--------------------\n");
+
 	if (argc != 2)
 		return (0);
 
@@ -22,7 +29,5 @@ int main(int argc, char **argv)
 	ft_putstr("\n\nGNL returned: ");
 	ft_putnbr(result);
 	close(fd);
-	//while (1)
-	//	;
 	return (0);
 }
