@@ -64,6 +64,7 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 	char 	temp_1[MAX_SIZE];
 	char	*temp_2;
 	int	j;
+	int	k;
 	
 	if (list == NULL)
 		return 0;
@@ -72,11 +73,10 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 	(*list)->current = (*list)->head;
 	while ((*list)->current != NULL)
 	{
-		if ((*list)->current->next == NULL || ft_strchr((*list)->current->str, '\n')) {
+		if ((*list)->current->next == NULL || (k = (ft_strichr((*list)->current->str, '\n')) ) > -1 ) {
 			if (i > -1)
 			{
 				ft_strncat(temp_1, ((char *)(*list)->current->str), (size_t)i + 1);
-				j = ((BUFF_SIZE * j) + i);
 				if ((size_t)i < (*list)->current->length)
 				{
 					temp_2 = (*list)->current->str;
@@ -95,7 +95,7 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 		j++;
 	}
 	if (temp_1[0] != '\0') {
-		*line = (i > -1) ? ft_strndup(temp_1, j) : ft_strdup(temp_1);
+		*line = (k > -1) ? ft_strndup(temp_1, k) : ft_strdup(temp_1);
 		return (1);
 	}
 	return (0);
