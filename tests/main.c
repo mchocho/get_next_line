@@ -3,10 +3,11 @@
 
 int main(int argc, char **argv)
 {
-	ft_putstr("Testing get_next_line.c\n");
+	//ft_putstr("Testing get_next_line.c\n");
 
 	int fd;
 	int result;
+	int i = 0;
 	char *arr;
 	arr = NULL;
 
@@ -23,11 +24,14 @@ int main(int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	while((result = get_next_line(fd, &arr)) == 1)
 	{
-		ft_putstr(arr);
+		ft_putendl(arr);
 		free(arr);
+		/*if (i == 30)
+			break;*/
+		i++;
 	}
-	ft_putstr("\n\nGNL returned: ");
-	ft_putnbr(result);
+	//ft_putstr("\n\nGNL returned: ");
+	//ft_putnbr(result);
 	close(fd);
 	return (0);
 }

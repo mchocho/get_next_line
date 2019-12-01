@@ -64,24 +64,27 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 	char 	temp_1[MAX_SIZE];
 	char	*temp_2;
 	int	j;
-	int	k;
 	
-	if (list == NULL)
+	if (*list == NULL)
+		return 0;
+	(*list)->current = (*list)->head;
+	if ((*list)->current == NULL)
 		return 0;
 	j = 0;
-	ft_bzero(temp_1, 42);
-	(*list)->current = (*list)->head;
+	ft_bzero(temp_1, 1);
 	while ((*list)->current != NULL)
 	{
-		if ((*list)->current->next == NULL || (k = (ft_strichr((*list)->current->str, '\n')) ) > -1 ) {
+		if ((*list)->current->next == NULL || ft_strchr((*list)->current->str, '\n')) {
 			if (i > -1)
 			{
-				ft_strncat(temp_1, ((char *)(*list)->current->str), (size_t)i + 1);
-				if ((size_t)i < (*list)->current->length)
+				ft_strncat(temp_1, ((char *)(*list)->current->str), (size_t)i);
+				j = (BUFF_SIZE * j) + i;
+				if ((size_t)i + 1 < (*list)->current->length)
 				{
-					temp_2 = (*list)->current->str;
-					(*list)->current->str = ft_strsub(temp_2, i + 1, (*list)->current->length - i);
-					free(temp_2);
+					temp_2 = ft_strsub((*list)->current->str, i + 1, (*list)->current->length - (i + 1));
+					ft_strcleandel(&(*list)->current->str);
+					(*list)->current->str = temp_2;
+					(*list)->current->length = (*list)->current->length - (i + 1);
 					break;
 				}
 			}
@@ -94,8 +97,9 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 		ft_cleanher(list, 0);
 		j++;
 	}
-	if (temp_1[0] != '\0') {
-		*line = (k > -1) ? ft_strndup(temp_1, k) : ft_strdup(temp_1);
+	if (temp_1[0] != '\0' || i > -1)
+	{
+		*line = (i > -1) ? ft_strndup(temp_1, j) : ft_strdup(temp_1);
 		return (1);
 	}
 	return (0);

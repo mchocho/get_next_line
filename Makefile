@@ -26,7 +26,7 @@ $(NAME):
 	ar rv $(NAME) $(OBJECT)
 	rm -rf *.gch
 	
-run:	
+run:
 	gcc $(FLAGS) main.c $(NAME) libft/libft.a
 	./a.out ./a.exe
 
