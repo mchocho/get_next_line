@@ -5,65 +5,50 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mchocho <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/15 14:58:28 by mchocho           #+#    #+#             */
-/*   Updated: 2019/09/17 14:24:15 by mchocho          ###   ########.fr       */
+/*   Created: 2020/01/19 14:45:55 by mchocho           #+#    #+#             */
+/*   Updated: 2020/01/19 15:43:20 by mchocho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/get_next_line.h"
 
-static void		ft_initlist(l_list **list)
+static char		*ft_getline(l_list **list, int *i, int *j)
 {
-	if (*list == NULL)
-		return ;
-	(*list)->current = NULL;
-	(*list)->head = NULL;
-	(*list)->tail = NULL;
-}
-
-static void		ft_addtail(l_list **list, char *str, size_t length)
-{
-	t_line *line;
-
-	if (*list == NULL || !(line = (t_line *)malloc(sizeof(t_line))))
-		return ;
-	line->str = ft_strdup(str);
-	line->length = length;
-	line->next = NULL;
-	if ((*list)->head == NULL)
-		(*list)->head = line;
-	else
-		(*list)->tail->next = line;
-	(*list)->tail = line;
-}
-
-static void		ft_cleanher(l_list **list, int all)
-{
-	t_line	*next;
+	char    temp_1[MAX_SIZE];
+	char	*temp_2;
+	char	*str;
+	size_t	length;
 
 	if (*list == NULL)
-		return ;
-	(*list)->current = (*list)->head;
-	next = (*list)->current->next;
-	ft_strcleandel(&(*list)->current->str);
-	(*list)->current->length = 0;
-	(*list)->current->next = NULL;
-	free((*list)->current);
-	(*list)->head = next;
-	(*list)->current = (*list)->head;
-	if (all)
+		return (NULL);
+	str = (*list)->current->str;
+	length = (*list)->current->length;
+	ft_bzero(temp_1, 1);
+	if (*i > -1)
 	{
-		(*list)->tail = NULL;
-		free(*list);
-		*list = NULL;
+		ft_strncat(temp_1, (*list)->current->str, (size_t)*i);
+		*j = (BUFF_SIZE * (*j)) + *i;
+		if ((size_t)(*i) + 1 < (*list)->current->length)
+		{
+			temp_2 = ft_strsub(str, (*i) + 1, length - ((*i) + 1));
+			ft_strcleandel(&(*list)->current->str);
+			(*list)->current->str = temp_2;
+			(*list)->current->length = length - ((*i) + 1);
+			return (ft_strdup(temp_1));
+		}
 	}
+	else
+			ft_strcat(temp_1, (*list)->current->str);
+	ft_cleanher(list, 1);
+	return (ft_strdup(temp_1));
 }
 
 static int		ft_concatbuffers(l_list **list, char **line, int i)
 {
-	char 	temp_1[MAX_SIZE];
-	char	*temp_2;
-	int	j;
+	t_line	*current;
+	char	*temp;
+	char 	str[MAX_SIZE];
+	int		j;
 	
 	if (*list == NULL)
 		return 0;
@@ -71,35 +56,25 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 	if ((*list)->current == NULL)
 		return 0;
 	j = 0;
-	ft_bzero(temp_1, 1);
+	ft_bzero(str, 1);
 	while ((*list)->current != NULL)
 	{
-		if ((*list)->current->next == NULL || ft_strchr((*list)->current->str, '\n')) {
-			if (i > -1)
-			{
-				ft_strncat(temp_1, ((char *)(*list)->current->str), (size_t)i);
-				j = (BUFF_SIZE * j) + i;
-				if ((size_t)i + 1 < (*list)->current->length)
-				{
-					temp_2 = ft_strsub((*list)->current->str, i + 1, (*list)->current->length - (i + 1));
-					ft_strcleandel(&(*list)->current->str);
-					(*list)->current->str = temp_2;
-					(*list)->current->length = (*list)->current->length - (i + 1);
-					break;
-				}
-			}
-			else
-				ft_strcat(temp_1, (*list)->current->str);
-			ft_cleanher(list, 1);
+		current = (*list)->current;
+		if (current->next == NULL || current->str[i] == '\n')
+		{
+			temp = ft_getline(list, &i, &j);
+			ft_strcat(str, temp);
+			ft_strcleandel(&temp);
 			break;
-		} else
-			ft_strcat(temp_1, (*list)->current->str);
+		}
+			else
+				ft_strcat(str, (*list)->current->str);
 		ft_cleanher(list, 0);
 		j++;
 	}
-	if (temp_1[0] != '\0' || i > -1)
+	if (str[0] != '\0' || i > -1)
 	{
-		*line = (i > -1) ? ft_strndup(temp_1, j) : ft_strdup(temp_1);
+		*line = (i > -1) ? ft_strndup(str, j) : ft_strdup(str);
 		return (1);
 	}
 	return (0);
@@ -107,9 +82,9 @@ static int		ft_concatbuffers(l_list **list, char **line, int i)
 
 int			get_next_line(const int fd, char **line)
 {
-	int		result;
-	int		i;
-	char		buffer[BUFF_SIZE + 1];
+	int				result;
+	int				i;
+	char			buffer[BUFF_SIZE + 1];
 	static l_list	*temp;
 
 	if (fd < 0 || read(fd, buffer, 0) < 0 || BUFF_SIZE < 0)
@@ -135,7 +110,7 @@ int			get_next_line(const int fd, char **line)
 		buffer[result] = '\0';
 		ft_addtail(&temp, buffer, (size_t)result);
 		if ((i = ft_strichr(buffer, '\n')) > -1)
-			break;
+			break ;
 	}
 	return ft_concatbuffers(&temp, line, i);
 }
