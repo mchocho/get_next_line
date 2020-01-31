@@ -6,17 +6,17 @@
 /*   By: mchocho <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 14:45:55 by mchocho           #+#    #+#             */
-/*   Updated: 2020/01/19 15:43:20 by mchocho          ###   ########.fr       */
+/*   Updated: 2020/01/31 10:22:10 by mchocho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/get_next_line.h"
 
-static int		ft_readFile(l_list **list, int fd)
+static int		ft_readfile(l_list **list, int fd)
 {
 	char		buffer[BUFF_SIZE + 1];
-	int		result;
-	int		i;
+	int			result;
+	int			i;
 
 	while ((result = read(fd, buffer, BUFF_SIZE)) > 0)
 	{
@@ -30,7 +30,7 @@ static int		ft_readFile(l_list **list, int fd)
 
 static char		*ft_getline(l_list **list, int *i, int *j)
 {
-	char    temp_1[MAX_SIZE];
+	char		temp_1[MAX_SIZE];
 
 	if (*list == NULL)
 		return (NULL);
@@ -53,8 +53,8 @@ static char		*ft_getline(l_list **list, int *i, int *j)
 
 static int		ft_concatbuffers(l_list **list, char **str, int *i, int *j)
 {
-	t_line	*current;
-	char 	*temp;
+	t_line		*current;
+	char		*temp;
 
 	current = (*list)->current;
 	if (*str == NULL)
@@ -73,20 +73,20 @@ static int		ft_concatbuffers(l_list **list, char **str, int *i, int *j)
 
 static int		ft_scanbuffers(l_list **list, char **line, int i)
 {
-	char 	*str;
-	int	j;
-	
+	char		*str;
+	int			j;
+
 	if (*list == NULL)
-		return 0;
+		return (0);
 	(*list)->current = (*list)->head;
 	if ((*list)->current == NULL)
-		return 0;
+		return (0);
 	j = 0;
 	str = ft_strnew(0);
 	while ((*list)->current != NULL)
 	{
 		if (ft_concatbuffers(list, &str, &i, &j))
-			break;
+			break ;
 		j++;
 	}
 	if (str[0] != '\0' || i > -1)
@@ -99,10 +99,10 @@ static int		ft_scanbuffers(l_list **list, char **line, int i)
 	return (0);
 }
 
-int			get_next_line(const int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
-	int		i;
-	char		buffer[1];
+	int				i;
+	char			buffer[1];
 	static l_list	*list;
 
 	if (fd < 0 || read(fd, buffer, 0) < 0 || BUFF_SIZE <= 0)
@@ -113,13 +113,15 @@ int			get_next_line(const int fd, char **line)
 		while (list->current != NULL)
 		{
 			if ((i = ft_strichr(list->current->str, '\n')) > -1)
-				return ft_scanbuffers(&list, line, i);
+				return (ft_scanbuffers(&list, line, i));
 			list->current = list->current->next;
 		}
-	} else {
+	}
+	else
+	{
 		list = (l_list *)malloc(sizeof(l_list));
 		ft_initlist(&list);
 	}
-	i = ft_readFile(&list, fd);
-	return ft_scanbuffers(&list, line, i);
+	i = ft_readfile(&list, fd);
+	return (ft_scanbuffers(&list, line, i));
 }
